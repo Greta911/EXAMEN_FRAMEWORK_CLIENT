@@ -14,7 +14,9 @@ function handleAdd(product) {
   <AppHeader />
   <main class="container mx-auto py-8 px-4 flex flex-wrap">
       <ProductList apiURL="https://6932ca7de5a9e342d270dc41.mockapi.io/" @add-to-cart="handleAdd" />
-      <Cart />
+      <Cart :cart="cartStore.cart"
+      @update-qty="cartStore.updateItem"
+      @remove-item="cartStore.deleteOneById" />
   </main>
   <AppFooter />
 </template>

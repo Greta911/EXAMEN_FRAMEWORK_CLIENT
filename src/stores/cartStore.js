@@ -30,17 +30,17 @@ const totalTVAC = computed(() =>
   ).toFixed(2)
 );
 
-// INIT (facultatif, pour charger localStorage)
+
+// Sauvegarde interne
+const persist = () => {
+  localStorage.setItem("eafc_cart", JSON.stringify(cart));
+};
+// INIT pour charger localStorage
 const init = () => {
   const saved = localStorage.getItem("eafc_cart");
   if (saved) {
       const parsed = JSON.parse(saved);
       cart.splice(0, cart.length, ...parsed);
-};
-
-// Sauvegarde interne
-const persist = () => {
-  localStorage.setItem("eafc_cart", JSON.stringify(cart));
 };
 }
 // CRUD PANIER 
@@ -79,7 +79,7 @@ const deleteOneById = async (id) => {
 const updateItem = async (item) => {
   const target = cart.find((p) => p.id === item.id);
   if (target) {
-    target.quantity = Math.max(0, item.quantity);
+    target.quantity = Math.max(1, item.quantity);
     persist();
   }
 };
@@ -99,7 +99,6 @@ export const cartStore = reactive({
   totalHTVA,
   TVA,
   totalTVAC,
-
   createItem,
   deleteOneById,
   updateItem,

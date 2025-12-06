@@ -1,11 +1,15 @@
 <script setup>
 import { cartStore } from "@/stores/cartStore.js";
 
-const props = defineProps({
+const { cart } = defineProps({
   cart: { type: Array, required: true }
 });
 
 const emit = defineEmits(["update-qty", "remove-item"]);
+
+function toPay() {
+  alert('Paiement efféctue');
+}
 </script>
 
 <template>
@@ -16,13 +20,13 @@ const emit = defineEmits(["update-qty", "remove-item"]);
       <!-- LISTE DES ARTICLES -->
       <ul class="divide-y divide-gray-200 space-y-4 p-6">
         <li
-          v-for="item in props.cart"
+          v-for="item in cart"
           :key="item.id"
           class="flex justify-between items-center py-3"
         >
           <div class="flex items-center">
             <img
-              :src="'https://picsum.photos/300/200/?random'"
+              :src="'https://picsum.photos/300/200/?random=${item.id}'"
               class="h-12 w-12 rounded-full mr-4"
             />
             <div>
@@ -34,7 +38,7 @@ const emit = defineEmits(["update-qty", "remove-item"]);
           <div class="flex items-center">
             <input
               type="number"
-              min="0"
+              min="1"
               class="form-input mt-1 block w-16 text-center rounded text-gray-700 border-gray-300 border"
               :value="item.quantity"
               @input="emit('update-qty', { ...item, quantity: Number($event.target.value) })"
@@ -44,7 +48,7 @@ const emit = defineEmits(["update-qty", "remove-item"]);
               @click="emit('remove-item', item.id)"
               class="ml-2 text-red-500 hover:text-red-700"
             >
-              <i class="fas fa-times"></i>
+              <i class="fa-solid fa-xmark text-xl"></i>
             </button>
           </div>
         </li>
@@ -66,7 +70,7 @@ const emit = defineEmits(["update-qty", "remove-item"]);
             <span><strong>Livraison:</strong></span>
 
             <select
-              v-model="cartStore.shippingType"
+              v-model="cartStore.shippingType.value"
               class="form-select py-1 px-2 block w-full rounded border border-gray-300 ml-2"
             >
               <option value="standard">Standard - €5</option>
@@ -81,7 +85,7 @@ const emit = defineEmits(["update-qty", "remove-item"]);
 
           <button
             class="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cart-btn"
-            @click="alert('Paiement simulé')"
+            @click="toPay"
           >
             Procéder au paiement
           </button>
