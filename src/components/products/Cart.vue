@@ -1,7 +1,9 @@
 <script setup>
+import { watch } from 'vue';
 import { useCartStore } from "@/stores/cartStore.js";
 
 const cartStore = useCartStore();
+watch(() => cartStore.cart, (v) => {}, { deep: true });
 </script>
 
 <template>
@@ -19,12 +21,11 @@ const cartStore = useCartStore();
           <div class="flex items-center">
             <img
               :src="item.image || `https://picsum.photos/300/200/?random=${item.id}`"
-              alt="Product"
               class="h-12 w-12 rounded-full mr-4 object-cover"
             />
             <div>
               <span class="font-semibold">{{ item.name }}</span>
-              <span class="block text-sm text-gray-500">€{{ item.price.toFixed(2) }}</span>
+              <span class="block text-sm text-gray-500">€{{ Number(item.price).toFixed(2) }}</span>
             </div>
           </div>
 
@@ -84,7 +85,7 @@ const cartStore = useCartStore();
 
           <button
             class="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cart-btn"
-            @click="alert('Paiement non implémenté')"
+            @click="alert('Paiement simulé')"
           >
             Procéder au paiement
           </button>
