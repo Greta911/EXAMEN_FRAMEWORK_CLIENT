@@ -61,7 +61,6 @@ const createItem = async (product) => {
       quantity: 1,
     });
   }
-
   persist();
 };
 

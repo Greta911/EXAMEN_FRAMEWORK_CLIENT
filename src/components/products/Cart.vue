@@ -1,9 +1,11 @@
 <script setup>
-import { watch } from 'vue';
-import { useCartStore } from "@/stores/cartStore.js";
+import { cartStore } from "@/stores/cartStore.js";
 
-const cartStore = useCartStore();
-watch(() => cartStore.cart, (v) => {}, { deep: true });
+const props = defineProps({
+  cart: { type: Array, required: true }
+});
+
+const emit = defineEmits(["update-qty", "remove-item"]);
 </script>
 
 <template>
@@ -14,18 +16,18 @@ watch(() => cartStore.cart, (v) => {}, { deep: true });
       <!-- LISTE DES ARTICLES -->
       <ul class="divide-y divide-gray-200 space-y-4 p-6">
         <li
-          v-for="item in cartStore.cart"
+          v-for="item in props.cart"
           :key="item.id"
           class="flex justify-between items-center py-3"
         >
           <div class="flex items-center">
             <img
-              :src="item.image || `https://picsum.photos/300/200/?random=${item.id}`"
-              class="h-12 w-12 rounded-full mr-4 object-cover"
+              :src="'https://picsum.photos/300/200/?random'"
+              class="h-12 w-12 rounded-full mr-4"
             />
             <div>
               <span class="font-semibold">{{ item.name }}</span>
-              <span class="block text-sm text-gray-500">€{{ Number(item.price).toFixed(2) }}</span>
+              <span class="block text-sm text-gray-500">€{{ item.price }}</span>
             </div>
           </div>
 
@@ -34,25 +36,19 @@ watch(() => cartStore.cart, (v) => {}, { deep: true });
               type="number"
               min="0"
               class="form-input mt-1 block w-16 text-center rounded text-gray-700 border-gray-300 border"
-              v-model.number="item.quantity"
-              @change="cartStore.updateQuantity(item.id, item.quantity)"
+              :value="item.quantity"
+              @input="emit('update-qty', { ...item, quantity: Number($event.target.value) })"
             />
 
             <button
-              @click="cartStore.removeProduct(item.id)"
+              @click="emit('remove-item', item.id)"
               class="ml-2 text-red-500 hover:text-red-700"
             >
               <i class="fas fa-times"></i>
             </button>
           </div>
         </li>
-
-        <!-- Panier vide -->
-        <li v-if="cartStore.cart.length === 0" class="text-center text-gray-500 py-4">
-          Votre panier est vide.
-        </li>
-      </ul>
-
+      </ul> 
       <!-- TOTALS + LIVRAISON -->
       <div class="bg-gray-50">
         <div class="p-6">

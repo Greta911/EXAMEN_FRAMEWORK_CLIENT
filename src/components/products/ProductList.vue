@@ -1,7 +1,8 @@
 <script setup>
-import { onMounted, watch } from "vue";
-import ProductCard from "./ProductCard.vue"; 
-import { useProductsStore } from "@/stores/productsStore.js";
+import { onMounted } from "vue"; 
+import { productsStore } from "@/stores/productsStore.js";
+import ProductCard from "./ProductCard.vue";
+
 const props = defineProps({
   apiURL: {
     type: String,
@@ -9,31 +10,27 @@ const props = defineProps({
   },
 });
 
-const productsStore = useProductsStore();
+const emit = defineEmits(["add-to-cart"]);
 
 onMounted(async () => {
-
-
-  // configurer l’URL dans le store
-  productsStore.setApiURL(props.apiURL);
-
-  // Charger les produits depuis MockAPI
-  await productsStore.fetchProducts();
+  productsStore.init(props.apiURL);
 });
 
-watch(() => props.apiURL, async (newUrl) => {
-  if (newUrl) await productsStore.fetchProducts(newUrl);
-});
+function forwardAdd(product) {
+  emit("add-to-cart", product);
+}
+
 </script>
 
 <template>
-  <section class="w-full px-4 py-6">
+  <section class="w-full md:w-2/3 px-4 mb-8">
     <h1 class="text-3xl font-bold mb-4">Nouveaux produits</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     <ProductCard 
       v-for="product in productsStore.products" 
       :key="product.id" 
-      :product="product" 
+      :product="product"
+      @add-to-cart="forwardAdd" 
     />
     </div>
   </section>
