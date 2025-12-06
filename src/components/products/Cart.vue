@@ -73,6 +73,7 @@ function toPay() {
               v-model="cartStore.shippingType.value"
               class="form-select py-1 px-2 block w-full rounded border border-gray-300 ml-2"
             >
+              <option disabled value="">Choisissez votre livraison</option>
               <option value="standard">Standard - €5</option>
               <option value="express">Express - €15</option>
             </select>

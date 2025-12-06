@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from "vue"; 
+import { onMounted, computed } from "vue"; 
 import { productsStore } from "@/stores/productsStore.js";
 import ProductCard from "./ProductCard.vue";
 
@@ -20,6 +20,7 @@ function forwardAdd(product) {
   emit("add-to-cart", product);
 }
 
+const newProducts = computed(() => productsStore.products.slice(0, 4));
 </script>
 
 <template>
@@ -27,9 +28,9 @@ function forwardAdd(product) {
     <h1 class="text-3xl font-bold mb-4">Nouveaux produits</h1>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
     <ProductCard 
-      v-for="product in productsStore.products" 
+      v-for="product in newProducts" 
       :key="product.id" 
-      :product="product"
+      :product=product
       @add-to-cart="forwardAdd" 
     />
     </div>

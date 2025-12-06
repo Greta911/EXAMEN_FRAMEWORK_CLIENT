@@ -4,12 +4,13 @@ import { reactive, computed } from "vue";
 const cart = reactive([]);
 
 // Shipping type
-const shippingType = reactive({ value: "standard" });
+const shippingType = reactive({value: null});
 
-// Prix livraison selon type
-const shippingPrice = computed(() =>
-  shippingType.value === "express" ? 15 : 5
-);
+// Prix livraison selon type 0 par défaut
+const shippingPrice = computed(() =>{
+  if (!shippingType.value) return 0;        
+  return shippingType.value === "express" ? 15 : 5;
+});
 
 // TOTALS
 const totalHTVA = computed(() => {
@@ -46,7 +47,7 @@ const init = () => {
 // CRUD PANIER 
 
 // createItem(product)
-// → ajoute 1 exemplaire ou incrémente
+// ajoute 1 produit ou incrémente
 const createItem = async (product) => {
   const existing = cart.find((p) => p.id === product.id);
 
