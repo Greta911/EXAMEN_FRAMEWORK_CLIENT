@@ -52,6 +52,10 @@ function toPay() {
             </button>
           </div>
         </li>
+        <!-- PANIER VIDE -->
+        <li v-if="cart.length === 0" class="text-center text-gray-500 py-4">
+          Votre panier est vide.
+        </li>
       </ul> 
       <!-- TOTALS + LIVRAISON -->
       <div class="bg-gray-50">
