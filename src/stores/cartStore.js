@@ -81,6 +81,11 @@ const deleteOneById = (id) => {
     cart.findIndex(item => item.id === id),
     1
   );
+
+  if (cart.length === 0) {
+    shippingType.value = null;
+  }
+
   persist();
 };
 
@@ -88,10 +93,19 @@ const deleteOneById = (id) => {
 // → met à jour quantité
 const updateItem = (item) => {
   const target = cart.find((p) => p.id === item.id);
-  if (target) {
-    target.quantity = Math.max(1, item.quantity);
+  if (!target) return;
+
+  if (item.quantity <= 0) {
+    cart.splice(cart.indexOf(target), 1);
+
+  if (cart.length === 0) {
+      shippingType.value = null;
+    }
     persist();
+    return;
   }
+  target.quantity = Number(item.quantity);
+  persist();
 };
 
 // SET shipping
