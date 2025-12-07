@@ -1,10 +1,15 @@
-import { reactive, computed } from "vue";
+import { reactive, computed, watch } from "vue";
 
 // Panier (réactif)
 const cart = reactive([]);
 
 // Shipping type
 const shippingType = reactive({value: null});
+
+watch(
+  () => shippingType.value,
+  () => persist()
+);
 
 // Prix livraison selon type 0 par défaut
 const shippingPrice = computed(() =>{
