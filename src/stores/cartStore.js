@@ -8,8 +8,9 @@ const shippingType = reactive({value: null});
 
 // Prix livraison selon type 0 par défaut
 const shippingPrice = computed(() =>{
-  if (!shippingType.value) return 0;        
-  return shippingType.value === "express" ? 15 : 5;
+  if (shippingType.value === "express") return 15;
+  if (shippingType.value === "standard") return 5;
+  return 0; 
 });
 
 // TOTALS
@@ -34,21 +35,24 @@ const totalTVAC = computed(() =>
 
 // Sauvegarde interne
 const persist = () => {
-  localStorage.setItem("eafc_cart", JSON.stringify(cart));
+  localStorage.setItem("eafc_cart", JSON.stringify({
+    cart,
+    shippingType: shippingType.value,})
+  );
 };
 // INIT pour charger localStorage
 const init = () => {
   const saved = localStorage.getItem("eafc_cart");
-  if (saved) {
-      const parsed = JSON.parse(saved);
-      cart.splice(0, cart.length, ...parsed);
+  if (!saved) return;
+    const parsed = JSON.parse(saved);
+    cart.splice(0, cart.length, ...(parsed.cart || []));
+    shippingType.value = parsed.shippingType || null;
 };
-}
 // CRUD PANIER 
 
 // createItem(product)
 // ajoute 1 produit ou incrémente
-const createItem = async (product) => {
+const createItem = (product) => {
   const existing = cart.find((p) => p.id === product.id);
 
   if (existing) {
@@ -67,9 +71,9 @@ const createItem = async (product) => {
 
 // deleteOneById(id)
 // → supprime du panier
-const deleteOneById = async (id) => {
+const deleteOneById = (id) => {
   cart.splice(
-    cart.findIndex((item) => item.id === id),
+    cart.findIndex(item => item.id === id),
     1
   );
   persist();
@@ -77,7 +81,7 @@ const deleteOneById = async (id) => {
 
 // updateItem(item)
 // → met à jour quantité
-const updateItem = async (item) => {
+const updateItem = (item) => {
   const target = cart.find((p) => p.id === item.id);
   if (target) {
     target.quantity = Math.max(1, item.quantity);

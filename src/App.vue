@@ -1,13 +1,20 @@
 <script setup>
+import { onMounted } from "vue";
 import AppHeader from "@/components/AppHeader.vue";
 import AppFooter from "@/components/AppFooter.vue";
 import ProductList from "@/components/products/ProductList.vue";
 import Cart from "@/components/products/Cart.vue";
 import { cartStore } from "@/stores/cartStore.js";
 
+onMounted(() => {
+  cartStore.init();   // pour restaurer le panier
+});
+
 function handleAdd(product) {
   cartStore.createItem(product);   // ajout dans le panier
 }
+
+
 </script>
 
 <template>

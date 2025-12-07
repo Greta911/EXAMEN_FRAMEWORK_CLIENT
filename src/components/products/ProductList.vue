@@ -19,7 +19,7 @@ onMounted(async () => {
 function forwardAdd(product) {
   emit("add-to-cart", product);
 }
-
+//Afficher seulement le 4 premières produits de la liste
 const newProducts = computed(() => productsStore.products.slice(0, 4));
 </script>
 
